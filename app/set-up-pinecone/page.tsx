@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { upsertDataToPinecone, queryPinecone, initPinecone } from "./actions";
+import { upsertDataToPinecone, initPinecone } from "./actions";
 
 export default function Home() {
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
@@ -18,13 +18,6 @@ export default function Home() {
     setLoadingStates((prev) => ({ ...prev, upsertButton: true }));
     await upsertDataToPinecone();
     setLoadingStates((prev) => ({ ...prev, upsertButton: false }));
-  }, []);
-
-  const onClickQuery = useCallback(async () => {
-    setLoadingStates((prev) => ({ ...prev, queryButton: true }));
-    const query = "Healing items";
-    await queryPinecone(query);
-    setLoadingStates((prev) => ({ ...prev, queryButton: false }));
   }, []);
 
   return (
@@ -45,12 +38,6 @@ export default function Home() {
           onClick={onClickUpsert}
         >
           {loadingStates["upsertButton"] ? "Loading..." : "Upsert Data"}
-        </button>
-        <button
-          className="mt-2 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
-          onClick={onClickQuery}
-        >
-          {loadingStates["queryButton"] ? "Loading..." : "Query Pinecone"}
         </button>
       </main>
     </div>

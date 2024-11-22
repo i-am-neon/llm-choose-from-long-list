@@ -70,10 +70,10 @@ export default function Home() {
         <p>
           Then:
           <Link
-            href="/set-up-pinecone"
+            href="/query"
             className="mt-2 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
           >
-            Set Up Pinecone
+            Query Pinecone
           </Link>
         </p>
       </main>

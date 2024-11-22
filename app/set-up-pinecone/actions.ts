@@ -1,16 +1,14 @@
 "use server";
 import { Pinecone, RecordValues } from "@pinecone-database/pinecone";
 import { fantasyRpgItems } from "./Fantasy_RPG_Items";
+import { indexName, model } from "./pinecone-constants";
 
-const pc = new Pinecone({
+const pineconeClient = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY || "",
 });
 
-const indexName = "items";
-const model = "multilingual-e5-large";
-
 export async function initPinecone() {
-  await pc.createIndex({
+  await pineconeClient.createIndex({
     name: indexName,
     dimension: 1024, // Replace with your model dimensions
     metric: "cosine", // Replace with your model metric
@@ -30,7 +28,7 @@ export async function upsertDataToPinecone() {
     };
   });
 
-  const embeddings = await pc.inference.embed(
+  const embeddings = await pineconeClient.inference.embed(
     model,
     data.map((d) => d.text),
     { inputType: "passage", truncate: "END" }
@@ -38,7 +36,7 @@ export async function upsertDataToPinecone() {
 
   console.log("embeddings[0]", JSON.stringify(embeddings[0], null, 2));
 
-  const index = pc.index(indexName);
+  const index = pineconeClient.index(indexName);
 
   const vectors = data.map((d, i) => ({
     id: d.id,
@@ -51,21 +49,5 @@ export async function upsertDataToPinecone() {
   const stats = await index.describeIndexStats();
 
   console.log("stats", JSON.stringify(stats, null, 2));
-}
-
-export async function queryPinecone(query: string) {
-  const embedding = await pc.inference.embed(model, [query], {
-    inputType: "query",
-  });
-
-  const index = pc.index(indexName);
-  const queryResponse = await index.namespace("ns1").query({
-    topK: 3,
-    vector: embedding[0].values as RecordValues,
-    includeValues: false,
-    includeMetadata: true,
-  });
-
-  console.log("queryResponse", JSON.stringify(queryResponse, null, 2));
 }
 
