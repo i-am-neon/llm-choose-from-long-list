@@ -62,7 +62,7 @@ export default function Home() {
           First:
           <Link
             href="/set-up-pinecone"
-            className="mt-2 flex items-center px-4 py-2 text-lg font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+            className="mt-2 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
           >
             Set Up Pinecone
           </Link>
@@ -71,7 +71,7 @@ export default function Home() {
           Then:
           <Link
             href="/set-up-pinecone"
-            className="mt-2 flex items-center px-4 py-2 text-lg font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+            className="mt-2 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
           >
             Set Up Pinecone
           </Link>
