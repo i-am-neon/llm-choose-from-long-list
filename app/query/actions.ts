@@ -6,7 +6,12 @@ const pineconeClient = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY || "",
 });
 
-export async function queryPinecone(query: string) {
+export interface QueryResult {
+  score: number;
+  text: string;
+}
+
+export async function queryPinecone(query: string): Promise<QueryResult[]> {
   const embedding = await pineconeClient.inference.embed(model, [query], {
     inputType: "query",
   });
@@ -20,5 +25,9 @@ export async function queryPinecone(query: string) {
   });
 
   console.log("queryResponse", JSON.stringify(queryResponse, null, 2));
+  return queryResponse.matches.map((match) => ({
+    score: match.score || 0,
+    text: match?.metadata?.text.toString() || "",
+  }));
 }
 
