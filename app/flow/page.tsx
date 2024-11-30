@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { generateItemQuery, generateSituation } from "./actions";
+import { generateItemQuery, generateSituation, chooseItem } from "./actions";
 import { queryPinecone, QueryResult } from "../query/actions";
 
 export default function Example() {
   const [situation, setSituation] = useState<string>();
   const [query, setQuery] = useState<string>();
-  const [queryResult, setQueryResult] = useState<QueryResult[]>();
+  const [queryResults, setQueryResults] = useState<QueryResult[]>();
+  const [chosenItem, setChosenItem] = useState<QueryResult>();
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
@@ -34,10 +35,23 @@ export default function Example() {
       throw new Error("Query is not defined");
     }
     setLoadingStates((prev) => ({ ...prev, queryDbButton: true }));
-    const _queryResult = await queryPinecone(query);
-    setQueryResult(_queryResult);
+    const _queryResults = await queryPinecone(query);
+    setQueryResults(_queryResults);
     setLoadingStates((prev) => ({ ...prev, queryDbButton: false }));
   }, [query]);
+
+  const getItem = useCallback(async () => {
+    if (!queryResults || !situation) {
+      throw new Error("Query results or situation is not defined");
+    }
+    setLoadingStates((prev) => ({ ...prev, getItemButton: true }));
+    const _chosenItem = await chooseItem({
+      itemOptions: queryResults,
+      situation,
+    });
+    setChosenItem(_chosenItem);
+    setLoadingStates((prev) => ({ ...prev, getItemButton: false }));
+  }, [queryResults, situation]);
 
   return (
     <div className="py-24 sm:py-32">
@@ -113,13 +127,13 @@ export default function Example() {
               >
                 {loadingStates["queryDbButton"] ? "Loading..." : "Query DB"}
               </button>
-              {queryResult && (
+              {queryResults && (
                 <div>
                   <h3 className="mt-4 text-pretty text-xl tracking-tight">
                     Query Result
                   </h3>
                   <ul className="mt-6 text-base/7">
-                    {queryResult.map((result, index) => (
+                    {queryResults.map((result, index) => (
                       <div key={index} className="mb-4">
                         <p>
                           <strong>Score:</strong> {result.score}
@@ -133,6 +147,31 @@ export default function Example() {
                       </div>
                     ))}
                   </ul>
+                </div>
+              )}
+            </div>
+          )}
+          {queryResults && (
+            <div>
+              <h2 className="text-pretty text-2xl font-semibold tracking-tight">
+                Choose the best item
+              </h2>
+              <p className="mt-2 text-base/7">description</p>
+              <button
+                id="getItemButton"
+                onClick={getItem}
+                className="mt-4 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+              >
+                {loadingStates["getItemButton"] ? "Loading..." : "Get Item"}
+              </button>
+              {chosenItem && (
+                <div>
+                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
+                    Chosen Item
+                  </h3>
+                  <p className="mt-6 text-base/7">
+                    {chosenItem.itemId} - {chosenItem.text}
+                  </p>
                 </div>
               )}
             </div>
