@@ -2,10 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { generateItemQuery, generateSituation } from "./actions";
+import { queryPinecone, QueryResult } from "../query/actions";
 
 export default function Example() {
   const [situation, setSituation] = useState<string>();
   const [query, setQuery] = useState<string>();
+  const [queryResult, setQueryResult] = useState<QueryResult[]>();
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
@@ -26,6 +28,16 @@ export default function Example() {
     setQuery(_query);
     setLoadingStates((prev) => ({ ...prev, createQueryButton: false }));
   }, [situation]);
+
+  const queryDb = useCallback(async () => {
+    if (!query) {
+      throw new Error("Query is not defined");
+    }
+    setLoadingStates((prev) => ({ ...prev, queryDbButton: true }));
+    const _queryResult = await queryPinecone(query);
+    setQueryResult(_queryResult);
+    setLoadingStates((prev) => ({ ...prev, queryDbButton: false }));
+  }, [query]);
 
   return (
     <div className="py-24 sm:py-32">
@@ -84,6 +96,43 @@ export default function Example() {
                     Generated Query
                   </h3>
                   <p className="mt-6 text-base/7">{query}</p>
+                </div>
+              )}
+            </div>
+          )}
+          {query && (
+            <div>
+              <h2 className="text-pretty text-2xl font-semibold tracking-tight">
+                Query the database
+              </h2>
+              <p className="mt-2 text-base/7">description</p>
+              <button
+                id="queryDbButton"
+                onClick={queryDb}
+                className="mt-4 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+              >
+                {loadingStates["queryDbButton"] ? "Loading..." : "Query DB"}
+              </button>
+              {queryResult && (
+                <div>
+                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
+                    Query Result
+                  </h3>
+                  <ul className="mt-6 text-base/7">
+                    {queryResult.map((result, index) => (
+                      <div key={index} className="mb-4">
+                        <p>
+                          <strong>Score:</strong> {result.score}
+                        </p>
+                        <p>
+                          <strong>ID:</strong> {result.itemId}
+                        </p>
+                        <p>
+                          <strong>Metadata:</strong> {result.text}
+                        </p>
+                      </div>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
