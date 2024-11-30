@@ -76,6 +76,15 @@ export default function Home() {
             Query Pinecone
           </Link>
         </p>
+        <p>
+          Then:
+          <Link
+            href="/flow"
+            className="mt-2 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+          >
+            Whole Flow
+          </Link>
+        </p>
       </main>
     </div>
   );

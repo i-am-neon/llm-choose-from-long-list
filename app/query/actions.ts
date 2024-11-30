@@ -9,6 +9,7 @@ const pineconeClient = new Pinecone({
 export interface QueryResult {
   score: number;
   text: string;
+  itemId: number;
 }
 
 export async function queryPinecone(query: string): Promise<QueryResult[]> {
@@ -25,9 +26,16 @@ export async function queryPinecone(query: string): Promise<QueryResult[]> {
   });
 
   console.log("queryResponse", JSON.stringify(queryResponse, null, 2));
-  return queryResponse.matches.map((match) => ({
-    score: match.score || 0,
-    text: match?.metadata?.text.toString() || "",
-  }));
+
+  return queryResponse.matches.map((match) => {
+    if (!match?.metadata?.text || !match.id || !match.score) {
+      throw new Error("Invalid match object: " + JSON.stringify(match));
+    }
+    return {
+      score: match.score,
+      text: match.metadata.text.toString(),
+      itemId: Number(match.id),
+    };
+  });
 }
 

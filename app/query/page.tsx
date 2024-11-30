@@ -24,17 +24,13 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <p>
-          Do these one after the other and check the logs on the server (they
-          will show up in your terminal, not in the browser)
-        </p>
         <form onSubmit={onClickQuery} className="flex flex-col gap-4">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="px-2 py-1 border rounded-lg text-black"
-            placeholder="Enter your query"
+            placeholder="Search items"
           />
           <button
             type="submit"
@@ -49,6 +45,9 @@ export default function Home() {
               <div key={index} className="mb-4">
                 <p>
                   <strong>Score:</strong> {result.score}
+                </p>
+                <p>
+                  <strong>ID:</strong> {result.itemId}
                 </p>
                 <p>
                   <strong>Metadata:</strong> {result.text}
