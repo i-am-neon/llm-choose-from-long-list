@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { generateItemQuery, generateSituation, chooseItem } from "./actions";
 import { queryPinecone, QueryResult } from "../query/actions";
+import ResultCard from "@/components/result-card";
 
 export default function Example() {
   const [situation, setSituation] = useState<string>();
@@ -81,12 +82,7 @@ export default function Example() {
                 : "Create Situation"}
             </button>
             {situation && (
-              <div>
-                <h3 className="mt-4 text-pretty text-xl tracking-tight">
-                  Generated Situation
-                </h3>
-                <p className="mt-6 text-base/7">{situation}</p>
-              </div>
+              <ResultCard title="Generated Situation" content={situation} />
             )}
           </div>
           {situation && (
@@ -104,14 +100,7 @@ export default function Example() {
                   ? "Loading..."
                   : "Create Query"}
               </button>
-              {query && (
-                <div>
-                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
-                    Generated Query
-                  </h3>
-                  <p className="mt-6 text-base/7">{query}</p>
-                </div>
-              )}
+              {query && <ResultCard title="Generated Query" content={query} />}
             </div>
           )}
           {query && (
@@ -128,26 +117,26 @@ export default function Example() {
                 {loadingStates["queryDbButton"] ? "Loading..." : "Query DB"}
               </button>
               {queryResults && (
-                <div>
-                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
-                    Query Result
-                  </h3>
-                  <ul className="mt-6 text-base/7">
-                    {queryResults.map((result, index) => (
-                      <div key={index} className="mb-4">
-                        <p>
-                          <strong>Score:</strong> {result.score}
-                        </p>
-                        <p>
-                          <strong>ID:</strong> {result.itemId}
-                        </p>
-                        <p>
-                          <strong>Metadata:</strong> {result.text}
-                        </p>
-                      </div>
-                    ))}
-                  </ul>
-                </div>
+                <ResultCard
+                  title="Query Results"
+                  content={
+                    <ul className="mt-6 text-base/7">
+                      {queryResults.map((result, index) => (
+                        <div key={index} className="mb-4">
+                          <p>
+                            <strong>Score:</strong> {result.score}
+                          </p>
+                          <p>
+                            <strong>ID:</strong> {result.itemId}
+                          </p>
+                          <p>
+                            <strong>Metadata:</strong> {result.text}
+                          </p>
+                        </div>
+                      ))}
+                    </ul>
+                  }
+                />
               )}
             </div>
           )}
@@ -165,14 +154,7 @@ export default function Example() {
                 {loadingStates["getItemButton"] ? "Loading..." : "Get Item"}
               </button>
               {chosenItem && (
-                <div>
-                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
-                    Chosen Item
-                  </h3>
-                  <p className="mt-6 text-base/7">
-                    {chosenItem.itemId} - {chosenItem.text}
-                  </p>
-                </div>
+                <ResultCard title="Chosen Item" content={chosenItem.text} />
               )}
             </div>
           )}

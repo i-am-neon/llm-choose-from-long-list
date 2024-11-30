@@ -11,6 +11,7 @@ export async function generateSituation(): Promise<string> {
     schema: z.object({
       situation: z.string(),
     }),
+    temperature: 1,
   });
 
   return situation;
