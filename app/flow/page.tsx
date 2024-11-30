@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { generateSituation } from "./actions";
+import { generateItemQuery, generateSituation } from "./actions";
 
 export default function Example() {
   const [situation, setSituation] = useState<string>();
+  const [query, setQuery] = useState<string>();
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
     {}
   );
@@ -15,6 +16,16 @@ export default function Example() {
     setSituation(_situation);
     setLoadingStates((prev) => ({ ...prev, createSituationButton: false }));
   }, []);
+
+  const getQuery = useCallback(async () => {
+    if (!situation) {
+      throw new Error("Situation is not defined");
+    }
+    setLoadingStates((prev) => ({ ...prev, createQueryButton: true }));
+    const _query = await generateItemQuery(situation);
+    setQuery(_query);
+    setLoadingStates((prev) => ({ ...prev, createQueryButton: false }));
+  }, [situation]);
 
   return (
     <div className="py-24 sm:py-32">
@@ -28,8 +39,8 @@ export default function Example() {
             the vector database to choose which item best suits the situation.
           </p>
         </div>
-        <section className="mt-20 grid grid-cols-1 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
-          <div className="">
+        <section className="mt-20 flex flex-col gap-8">
+          <div>
             <h2 className="text-pretty text-2xl font-semibold tracking-tight">
               Create a situation for an item to be chosen
             </h2>
@@ -52,6 +63,31 @@ export default function Example() {
               </div>
             )}
           </div>
+          {situation && (
+            <div>
+              <h2 className="text-pretty text-2xl font-semibold tracking-tight">
+                Create a query to search for the item
+              </h2>
+              <p className="mt-2 text-base/7">description</p>
+              <button
+                id="createQueryButton"
+                onClick={getQuery}
+                className="mt-4 flex items-center px-2 py-1 font-semibold rounded-lg shadow-lg bg-black dark:bg-white text-white dark:text-black"
+              >
+                {loadingStates["createQueryButton"]
+                  ? "Loading..."
+                  : "Create Query"}
+              </button>
+              {query && (
+                <div>
+                  <h3 className="mt-4 text-pretty text-xl tracking-tight">
+                    Generated Query
+                  </h3>
+                  <p className="mt-6 text-base/7">{query}</p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       </div>
     </div>
