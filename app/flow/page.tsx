@@ -59,7 +59,7 @@ export default function Example() {
       <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
         <div className="max-w-4xl">
           <h1 className="mt-2 text-pretty text-4xl font-semibold tracking-tight sm:text-5xl">
-            The Whole Flow
+            The Whole RAG Agent Flow
           </h1>
           <p className="mt-6 text-balance text-xl/8">
             This is a step by step representation of the flow of the AI using
@@ -71,7 +71,10 @@ export default function Example() {
             <h2 className="text-pretty text-2xl font-semibold tracking-tight">
               Create a situation for an item to be chosen
             </h2>
-            <p className="mt-2 text-base/7">description</p>
+            <p className="mt-2 text-base/7">
+              This is to get us started with a video game situation that we can
+              use our RAG agent to choose an item for.
+            </p>
             <button
               id="createSituationButton"
               onClick={getSituation}
@@ -90,7 +93,10 @@ export default function Example() {
               <h2 className="text-pretty text-2xl font-semibold tracking-tight">
                 Create a query to search for the item
               </h2>
-              <p className="mt-2 text-base/7">description</p>
+              <p className="mt-2 text-base/7">
+                The LLM uses the situation to come up with a query to search the
+                vector database.
+              </p>
               <button
                 id="createQueryButton"
                 onClick={getQuery}
@@ -108,7 +114,10 @@ export default function Example() {
               <h2 className="text-pretty text-2xl font-semibold tracking-tight">
                 Query the database
               </h2>
-              <p className="mt-2 text-base/7">description</p>
+              <p className="mt-2 text-base/7">
+                Query the vector database to return the top five video game
+                items that are most similar to the query.
+              </p>
               <button
                 id="queryDbButton"
                 onClick={queryDb}
@@ -145,7 +154,10 @@ export default function Example() {
               <h2 className="text-pretty text-2xl font-semibold tracking-tight">
                 Choose the best item
               </h2>
-              <p className="mt-2 text-base/7">description</p>
+              <p className="mt-2 text-base/7">
+                The final LLM call is given the situation and query results. It
+                must choose the most likely item for the situation.
+              </p>
               <button
                 id="getItemButton"
                 onClick={getItem}
