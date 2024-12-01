@@ -20,7 +20,7 @@ export async function initPinecone() {
     },
   });
 }
-export async function upsertDataToPinecone() {
+export async function upsertDataToPinecone(): Promise<void> {
   const data = fantasyRpgItems.map((item, index) => {
     return {
       id: index.toString(),
