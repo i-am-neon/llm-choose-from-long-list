@@ -11,7 +11,7 @@ export default function Home() {
         <p className="mt-4">
           For very longs lists, LLMs have a hard time choosing the right item
           given criteria on how to choose. With very long lists, the LLM does
-          not weigh each option equally and occaisionally it will hallucinate
+          not weigh each option equally and occasionally it will hallucinate
           options that are not in the list. This tutorial will show you how to
           make an LLM choose from a list using RAG (Retrieval-Augmented
           Generation).
