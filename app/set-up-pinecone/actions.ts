@@ -10,8 +10,8 @@ const pineconeClient = new Pinecone({
 export async function initPinecone() {
   await pineconeClient.createIndex({
     name: indexName,
-    dimension: 1024, // Replace with your model dimensions
-    metric: "cosine", // Replace with your model metric
+    dimension: 1024,
+    metric: "cosine",
     spec: {
       serverless: {
         cloud: "aws",
@@ -34,8 +34,6 @@ export async function upsertDataToPinecone(): Promise<void> {
     { inputType: "passage", truncate: "END" }
   );
 
-  console.log("embeddings[0]", JSON.stringify(embeddings[0], null, 2));
-
   const index = pineconeClient.index(indexName);
 
   const vectors = data.map((d, i) => ({
@@ -45,9 +43,5 @@ export async function upsertDataToPinecone(): Promise<void> {
   }));
 
   await index.namespace("ns1").upsert(vectors);
-
-  const stats = await index.describeIndexStats();
-
-  console.log("stats", JSON.stringify(stats, null, 2));
 }
 
